@@ -50,17 +50,25 @@ const useStyles = createStyles((theme) => ({
 
 const links = [
     {
-        label: "dancers",
+        label: "Home",
+        link: "#####"
+    },
+    {
+        label: "Dancers",
         link: "#"
     },
     {
-        label: "teachers",
-        link: "#"
+        label: "Teachers",
+        link: "##"
     },
     {
-        label: "contact",
-        link: "#"
+        label: "Contact",
+        link: "###"
     },
+    {
+        label: "Events",
+        link: "https://www.notion.so"
+    }
 ]
 
 export default function HeaderSimple() {
