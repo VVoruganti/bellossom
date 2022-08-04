@@ -51,13 +51,13 @@ export default function Home() {
                     <Paper shadow='xs' p='md' className={classes.subscribers}>Subscribers</Paper>
                     <SimpleGrid cols={4} mt={10}>
                         <Link href="/location/nyc"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
-                        <Paper shadow='xs' className={classes.location}>New York</Paper>
-                        <Paper shadow='xs' className={classes.location}>New York</Paper>
-                        <Paper shadow='xs' className={classes.location}>New York</Paper>
-                        <Paper shadow='xs' className={classes.location}>New York</Paper>
-                        <Paper shadow='xs' className={classes.location}>New York</Paper>
-                        <Paper shadow='xs' className={classes.location}>New York</Paper>
-                        <Paper shadow='xs' className={classes.location}>New York</Paper>
+                        <Link href="/location/boston"><Paper shadow='xs' className={classes.location}>Boston</Paper></Link>
+                        <Link href="/location/philly"><Paper shadow='xs' className={classes.location}>Philadelphia</Paper></Link>
+                        <Link href="/location/san-diego"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
+                        <Link href="/location/san-francisco"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
+                        <Link href="/location/dc"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
+                        <Link href="/location/nyc"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
+                        <Link href="/location/nyc"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
                     </SimpleGrid>
                 </div>
             </main>
