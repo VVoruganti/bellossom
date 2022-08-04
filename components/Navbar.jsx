@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { createStyles, Header, Text, Container, Group, Burger } from '@mantine/core';
 import { useBooleanToggle } from '@mantine/hooks';
+import Link from 'next/link';
+import { NextLink } from '@mantine/next';
 
 const useStyles = createStyles((theme) => ({
     header: {
+        paddingLeft: theme.spacing.md,
+        paddingRight: theme.spacing.md,
         display: 'flex',
-        justifyContent: 'space-between',
+        flexDirection: 'row',
         alignItems: 'center',
-        height: '100%',
+        justifyContent: 'space-between'
     },
 
     links: {
@@ -33,33 +37,19 @@ const useStyles = createStyles((theme) => ({
         fontWeight: 500,
 
         '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-        },
-    },
-
-    linkActive: {
-        '&, &:hover': {
-            backgroundColor:
-                theme.colorScheme === 'dark'
-                    ? theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.25)
-                    : theme.colors[theme.primaryColor][0],
-            color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 3 : 7],
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.blue[6] : theme.colors.violet[2],
         },
     },
 }));
 
 const links = [
     {
-        label: "Home",
-        link: "#####"
-    },
-    {
-        label: "Dancers",
-        link: "#"
+        label: "Find a Workshop",
+        link: "/workshops"
     },
     {
         label: "Teachers",
-        link: "##"
+        link: "/locations"
     },
     {
         label: "Contact",
@@ -77,34 +67,28 @@ export default function HeaderSimple() {
     const { classes, cx } = useStyles();
 
     const items = links.map((link) => (
-        <a
+        <NextLink
             key={link.label}
             href={link.link}
-            className={cx(classes.link, { [classes.linkActive]: active === link.link })}
-            onClick={(event) => {
-                event.preventDefault();
-                setActive(link.link);
-            }}
+            className={classes.link}
         >
             {link.label}
-        </a>
+        </NextLink>
     ));
 
     return (
-        <Header height={60} mb={120}>
-            <Container className={classes.header}>
-                <Text>Dance Planner</Text>
-                <Group spacing={5} className={classes.links}>
-                    {items}
-                </Group>
+        <Header height={60} className={classes.header} >
+            <NextLink href="/" style={{ color: 'blue' }}>Dance Planner</NextLink>
+            <Group spacing={5} className={classes.links}>
+                {items}
+            </Group>
 
-                <Burger
-                    opened={opened}
-                    onClick={() => toggleOpened()}
-                    className={classes.burger}
-                    size="sm"
-                />
-            </Container>
+            <Burger
+                opened={opened}
+                onClick={() => toggleOpened()}
+                className={classes.burger}
+                size="sm"
+            />
         </Header>
     );
 }
