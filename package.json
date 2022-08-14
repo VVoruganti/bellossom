@@ -17,6 +17,7 @@
     "@mantine/next": "^5.0.2",
     "@mantine/ssr": "^5.0.2",
     "@prisma/client": "^4.2.1",
+    "@tabler/icons": "^1.82.0",
     "dayjs": "^1.11.4",
     "next": "12.2.3",
     "prisma": "^4.2.1",

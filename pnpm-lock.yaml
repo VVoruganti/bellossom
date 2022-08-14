@@ -9,6 +9,7 @@ specifiers:
   '@mantine/next': ^5.0.2
   '@mantine/ssr': ^5.0.2
   '@prisma/client': ^4.2.1
+  '@tabler/icons': ^1.82.0
   dayjs: ^1.11.4
   eslint: 8.21.0
   eslint-config-next: 12.2.3
@@ -28,6 +29,7 @@ dependencies:
   '@mantine/next': 5.0.2_osplj3wg3ppifgkbnvaanhfz7a
   '@mantine/ssr': 5.0.2_ggzehj26xzvkh5hu7mv3mcxwfu
   '@prisma/client': 4.2.1_prisma@4.2.1
+  '@tabler/icons': 1.82.0_biqbaboplfbrettd7655fr4n2y
   dayjs: 1.11.4
   next: 12.2.3_biqbaboplfbrettd7655fr4n2y
   prisma: 4.2.1
@@ -708,6 +710,21 @@ packages:
     resolution: {integrity: sha512-6JrF+fdUK2zbGpJIlN7G3v966PQjyx/dPt1T9km2wj+EUBqgrxCk3uX4Kct16MIm9gGxfKRcfax2hVf5jvlTzA==}
     dependencies:
       tslib: 2.4.0
+    dev: false
+
+  /@tabler/icons/1.82.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-Ai5vbnOvJ38oQ7mHVvWAZ0oUzLtdd83oxQmxOnvX9jaHYDhkQbFVRofBY+Z1W/+NOPcxe5k3iI9rf8q0VINCHg==}
+    peerDependencies:
+      react: ^16.x || 17.x || 18.x
+      react-dom: ^16.x || 17.x || 18.x
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /@types/json5/0.0.29:

@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
-import { createStyles, Header, Text, Container, Group, Burger } from '@mantine/core';
+import { createStyles, Header, Button, Text, Container, Image, Group, Burger } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import Link from 'next/link';
 import { NextLink } from '@mantine/next';
 
-const useStyles = createStyles((theme) => ({
-    header: {
-        paddingLeft: theme.spacing.md,
-        paddingRight: theme.spacing.md,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
 
+const HEADER_HEIGHT = 60;
+
+const useStyles = createStyles((theme) => ({
     links: {
         [theme.fn.smallerThan('xs')]: {
             display: 'none',
         },
+    },
+
+    inner: {
+        height: HEADER_HEIGHT,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
 
     burger: {
@@ -44,7 +45,7 @@ const useStyles = createStyles((theme) => ({
 
 const links = [
     {
-        label: "Find a Workshop",
+        label: "Workshops",
         link: "/workshops"
     },
     {
@@ -55,10 +56,6 @@ const links = [
         label: "Contact",
         link: "###"
     },
-    {
-        label: "Events",
-        link: "https://www.notion.so"
-    }
 ]
 
 export default function HeaderSimple() {
@@ -77,18 +74,24 @@ export default function HeaderSimple() {
     ));
 
     return (
-        <Header height={60} className={classes.header} >
-            <NextLink href="/" style={{ color: 'blue' }}>Dance Planner</NextLink>
-            <Group spacing={5} className={classes.links}>
-                {items}
-            </Group>
-
-            <Burger
-                opened={opened}
-                onClick={() => toggleOpened()}
-                className={classes.burger}
-                size="sm"
-            />
+        <Header height={HEADER_HEIGHT} >
+            <Container className={classes.inner} fluid>
+                <Group>
+                    <Burger
+                        opened={opened}
+                        onClick={() => toggleOpened()}
+                        className={classes.burger}
+                        size="sm"
+                    />
+                    <NextLink href="/" style={{ color: 'blue' }}><Image src="/dummy_logo.svg" width={200} /></NextLink>
+                </Group>
+                <Group spacing={5} className={classes.links}>
+                    {items}
+                </Group>
+                <Button>
+                    Signup
+                </Button>
+            </Container>
         </Header>
     );
 }
