@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Dancer {
+    id          String     @id @default(cuid())
+    name        String
+    email       String
+    website     String?
+    description String?
+    picture     String?
+    workshops   Workshop[]
+}
+
+model Workshop {
+    id          String       @id @default(cuid())
+    location    Location
+    active      Boolean
+    type        WorkshopType
+    full        Boolean
+    date        DateTime
+    signup      String
+    Dancer      Dancer?      @relation(fields: [dancerId], references: [id])
+    dancerId    String?
+    description String
+    usrs        User[]
+}
+
+model User {
+    id        String     @id @default(cuid())
+    name      String
+    email     String
+    workshops Workshop[]
+}
+
+enum WorkshopType {
+    FUSION
+    CLASSICAL
+    BOLLYWOOD
+}
+
+enum Location {
+    PHILADELPHIA
+    BOSTON
+    CHICAGO
+    BALTIMORE
+    PITTSBURGH
+    CHARLOTTE
+    WASHINGTON_DC
+    NEW_YORK
+}
