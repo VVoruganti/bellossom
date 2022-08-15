@@ -22,7 +22,7 @@ model Dancer {
 
 model Workshop {
     id          String       @id @default(cuid())
-    location    Location
+    location    Location     @relation(fields: [locationId], references: [id])
     active      Boolean
     type        WorkshopType
     full        Boolean
@@ -31,7 +31,8 @@ model Workshop {
     Dancer      Dancer?      @relation(fields: [dancerId], references: [id])
     dancerId    String?
     description String
-    usrs        User[]
+    users       User[]
+    locationId  String
 }
 
 model User {
@@ -41,19 +42,26 @@ model User {
     workshops Workshop[]
 }
 
+model Location {
+    id        String     @id @default(cuid())
+    name      String
+    picture   String?
+    Workshops Workshop[]
+}
+
 enum WorkshopType {
     FUSION
     CLASSICAL
     BOLLYWOOD
 }
 
-enum Location {
-    PHILADELPHIA
-    BOSTON
-    CHICAGO
-    BALTIMORE
-    PITTSBURGH
-    CHARLOTTE
-    WASHINGTON_DC
-    NEW_YORK
-}
+// enum Location {
+//     PHILADELPHIA
+//     BOSTON
+//     CHICAGO
+//     BALTIMORE
+//     PITTSBURGH
+//     CHARLOTTE
+//     WASHINGTON_DC
+//     NEW_YORK
+// }

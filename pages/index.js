@@ -1,7 +1,8 @@
 import Navbar from '../components/Navbar.jsx'
-import { createStyles, Container, List, Title, ThemeIcon, SimpleGrid, Text, Image, Button, Group, Center, Paper } from '@mantine/core'
+import { createStyles, Container, Box, List, Title, ThemeIcon, BackgroundImage, SimpleGrid, Text, Image, Button, Group, Center, Paper } from '@mantine/core'
 import { IconCheck } from '@tabler/icons';
 import Link from 'next/link'
+import prisma from '../lib/prisma';
 
 const useStyles = createStyles((theme) => ({
     /*
@@ -15,7 +16,8 @@ const useStyles = createStyles((theme) => ({
         paddingTop: theme.spacing.xl,
         paddingBottom: theme.spacing.xl,
         display: 'flex',
-        justifyContent: 'center',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
         alignItems: 'center'
     },
 
@@ -62,6 +64,13 @@ const useStyles = createStyles((theme) => ({
         padding: '4px 12px',
     },
 
+    locationHighlight: {
+        position: 'relative',
+        backgroundColor: theme.colors.indigo,
+        borderRadius: theme.radius.sm,
+        padding: '4px 12px',
+    },
+
     title: {
         color: theme.colorScheme === 'dark' ? theme.white : theme.black,
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
@@ -73,25 +82,34 @@ const useStyles = createStyles((theme) => ({
         },
     },
 
-    /*
-    location: {
-        width: 150,
-        height: 150,
-        backgroundColor: theme.colors.violet,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: 'white',
 
+    location: {
+        height: 150,
         '&:hover': {
-            cursor: 'pointer'
-        }
-    } */
+            boxShadow: `${theme.shadows.md} !important`,
+            transform: 'scale(1.05)',
+            cursor: "pointer",
+        },
+    }
 
 }))
 
-export default function Home() {
-    const { classes, cx } = useStyles();
+export default function Home({ locations }) {
+    const { classes } = useStyles();
+
+
+    const locationCards = locations.map((location, idx) => {
+        return (
+            <Link href="/location/nyc" passHref>
+                <BackgroundImage className={classes.location} component="a" src={location.picture} radius="sm" >
+                    <Center style={{ width: '100%', height: '100%' }}>
+                        <Text color="white" weight={500}><span className={classes.locationHighlight}> {location.name}</span></Text>
+                    </Center>
+                </BackgroundImage >
+            </Link>
+        )
+    })
+
 
     return (
         <div>
@@ -141,24 +159,20 @@ export default function Home() {
             </section>
             <section className={classes.section}>
                 <Title>Browse By Location</Title>
+                <SimpleGrid cols={3} mt={10} style={{ width: '80%' }}>
+                    {locationCards}
+                </SimpleGrid>
             </section>
         </div >
     )
 }
 
+export async function getServerSideProps(context) {
 
-/**
- *
- *
- *                     <SimpleGrid cols={4} mt={10}>
-                        <Link href="/location/nyc"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
-                        <Link href="/location/boston"><Paper shadow='xs' className={classes.location}>Boston</Paper></Link>
-                        <Link href="/location/philly"><Paper shadow='xs' className={classes.location}>Philadelphia</Paper></Link>
-                        <Link href="/location/san-diego"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
-                        <Link href="/location/san-francisco"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
-                        <Link href="/location/dc"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
-                        <Link href="/location/nyc"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
-                        <Link href="/location/nyc"><Paper shadow='xs' className={classes.location}>New York</Paper></Link>
-                    </SimpleGrid>
-
-    */
+    const locations = await prisma.location.findMany()
+    return {
+        props: {
+            locations
+        }, // will be passed to the page component as props
+    }
+}

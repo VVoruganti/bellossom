@@ -60,8 +60,7 @@ const links = [
 
 export default function HeaderSimple() {
     const [opened, toggleOpened] = useToggle([false, true]);
-    const [active, setActive] = useState(links[0].link);
-    const { classes, cx } = useStyles();
+    const { classes } = useStyles();
 
     const items = links.map((link) => (
         <NextLink
@@ -88,9 +87,9 @@ export default function HeaderSimple() {
                 <Group spacing={5} className={classes.links}>
                     {items}
                 </Group>
-                <Button>
-                    Signup
-                </Button>
+                <Link href="/auth" passHref>
+                    <Button component="a">Signup</Button>
+                </Link>
             </Container>
         </Header>
     );
