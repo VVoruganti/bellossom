@@ -8,6 +8,7 @@ specifiers:
   '@mantine/hooks': ^5.0.2
   '@mantine/next': ^5.0.2
   '@mantine/ssr': ^5.0.2
+  '@passageidentity/passage-js': ^2.3.6
   '@prisma/client': ^4.2.1
   '@tabler/icons': ^1.82.0
   dayjs: ^1.11.4
@@ -28,6 +29,7 @@ dependencies:
   '@mantine/hooks': 5.0.2_react@18.2.0
   '@mantine/next': 5.0.2_osplj3wg3ppifgkbnvaanhfz7a
   '@mantine/ssr': 5.0.2_ggzehj26xzvkh5hu7mv3mcxwfu
+  '@passageidentity/passage-js': 2.3.6
   '@prisma/client': 4.2.1_prisma@4.2.1
   '@tabler/icons': 1.82.0_biqbaboplfbrettd7655fr4n2y
   dayjs: 1.11.4
@@ -567,6 +569,13 @@ packages:
       fastq: 1.13.0
     dev: true
 
+  /@passageidentity/passage-js/2.3.6:
+    resolution: {integrity: sha512-IJZ2MbMP1snHlBx0LClmdBbufJ4p/+t8Zxqag2YelY/hTgeSUldNHaM70cCfjuFb/QX84t2dj+BERPNbQ07hSw==}
+    dependencies:
+      '@types/node': 17.0.45
+      jwt-decode: 3.1.2
+    dev: false
+
   /@prisma/client/4.2.1_prisma@4.2.1:
     resolution: {integrity: sha512-PZBkY60+k5oix+e6IUfl3ub8TbRLNsPLdfWrdy2eh80WcHTaT+/UfvXf/B7gXedH7FRtbPFHZXk1hZenJiJZFQ==}
     engines: {node: '>=14.17'}
@@ -733,6 +742,10 @@ packages:
 
   /@types/node/14.18.23:
     resolution: {integrity: sha512-MhbCWN18R4GhO8ewQWAFK4TGQdBpXWByukz7cWyJmXhvRuCIaM/oWytGPqVmDzgEnnaIc9ss6HbU5mUi+vyZPA==}
+    dev: false
+
+  /@types/node/17.0.45:
+    resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: false
 
   /@types/parse-json/4.0.0:
@@ -1991,6 +2004,10 @@ packages:
       array-includes: 3.1.5
       object.assign: 4.1.2
     dev: true
+
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
 
   /language-subtag-registry/0.3.22:
     resolution: {integrity: sha512-tN0MCzyWnoz/4nHS6uxdlFWoUZT7ABptwKPQ52Ea7URk6vll88bWBVhodtnlfEuCcKWNGoc+uGbw1cwa9IKh/w==}

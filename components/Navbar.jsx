@@ -50,11 +50,11 @@ const links = [
     },
     {
         label: "Teachers",
-        link: "/locations"
+        link: "/teachers"
     },
     {
-        label: "Contact",
-        link: "###"
+        label: "My Profile",
+        link: "/profile"
     },
 ]
 

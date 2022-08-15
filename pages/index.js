@@ -5,12 +5,6 @@ import Link from 'next/link'
 import prisma from '../lib/prisma';
 
 const useStyles = createStyles((theme) => ({
-    /*
-    parent: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-*/
 
     section: {
         paddingTop: theme.spacing.xl,
@@ -28,16 +22,6 @@ const useStyles = createStyles((theme) => ({
         paddingTop: theme.spacing.xl * 4,
         paddingBottom: theme.spacing.xl * 4,
     },
-
-    /*
-    inner: {
-        width: '70%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'flex-start'
-    },
-*/
 
     content: {
         maxWidth: 480,
@@ -94,13 +78,14 @@ const useStyles = createStyles((theme) => ({
 
 }))
 
-export default function Home({ locations }) {
+export default function Home({ locations, workshops }) {
     const { classes } = useStyles();
 
 
     const locationCards = locations.map((location, idx) => {
         return (
-            <Link href="/location/nyc" passHref>
+            // TODO dynamic link generation based on location enum
+            <Link key={idx} href="/location/nyc" passHref>
                 <BackgroundImage className={classes.location} component="a" src={location.picture} radius="sm" >
                     <Center style={{ width: '100%', height: '100%' }}>
                         <Text color="white" weight={500}><span className={classes.locationHighlight}> {location.name}</span></Text>
@@ -110,6 +95,19 @@ export default function Home({ locations }) {
         )
     })
 
+
+    const workshopCards = workshops.map((workshop, idx) => {
+        return (
+            // TODO dynamic link generation based on id
+            <Link key={idx} href="/workshop/id" passHref>
+                <Paper className={classes.location} component="a" shadow='xs' radius="sm" >
+                    <Center style={{ width: '100%', height: '100%' }}>
+                        <Text color="white" weight={500}><span className={classes.locationHighlight}> {workshop.id}</span></Text>
+                    </Center>
+                </Paper >
+            </Link>
+        )
+    });
 
     return (
         <div>
@@ -156,6 +154,9 @@ export default function Home({ locations }) {
             </section>
             <section className={classes.section}>
                 <Title>Upcoming Events </Title>
+                <SimpleGrid cols={3} mt={10} style={{ width: '80%' }}>
+                    {workshopCards}
+                </SimpleGrid>
             </section>
             <section className={classes.section}>
                 <Title>Browse By Location</Title>
@@ -170,9 +171,20 @@ export default function Home({ locations }) {
 export async function getServerSideProps(context) {
 
     const locations = await prisma.location.findMany()
+    const workshops = await prisma.workshop.findMany({ take: 6 })
+
+    workshops.forEach((workshop) => {
+        Object.entries(workshop).forEach(([key, prop]) => {
+            if (prop instanceof Date) {
+                workshop[key] = prop.toString();
+            }
+        });
+    });
+
     return {
         props: {
-            locations
+            locations,
+            workshops
         }, // will be passed to the page component as props
     }
 }
