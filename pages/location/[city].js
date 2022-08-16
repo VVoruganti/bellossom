@@ -17,6 +17,7 @@ import {
 import { DateRangePicker, DateRangePickerValue, DatePicker } from '@mantine/dates';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import prisma from "../lib/prisma"
 
 const useStyles = createStyles((theme) => ({
 
