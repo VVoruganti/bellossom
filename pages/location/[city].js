@@ -1,56 +1,43 @@
 import Navbar from '../../components/Navbar.jsx'
-import { createStyles, Table, Title, Group, SimpleGrid, Paper, Text, ScrollArea, MultiSelect } from '@mantine/core'
+import {
+    createStyles,
+    Container,
+    Switch,
+    Title,
+    Spoiler,
+    Text,
+    Image,
+    Card,
+    Group,
+    Table,
+    Button,
+    SimpleGrid,
+    Badge,
+} from '@mantine/core'
 import { DateRangePicker, DateRangePickerValue, DatePicker } from '@mantine/dates';
-import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
-    parent: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
+
     inner: {
-        width: '70%',
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'flex-start',
+        paddingTop: theme.spacing.xl,
         alignItems: 'center',
-        justifyContent: 'flex-start'
     },
 
-    subscribers: {
-        backgroundColor: theme.colors.indigo,
-        width: '50%',
-        textAlign: 'center',
-        color: 'white'
-    },
-
-    filters: {
-        marginTop: 15,
-        marginBottom: 15,
-    },
-
-    dancer: {
-        width: 150,
-        height: 150,
-        backgroundColor: theme.colors.violet,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: 'white',
-
-        '&:hover': {
-            cursor: 'pointer'
-        }
+    gallery: {
+        paddingTop: theme.spacing.md,
+        width: '100%',
     }
 
 }))
-
-export default function Location() {
+export default function Location({ workshops }) {
     const { classes } = useStyles();
-
+    const [tableOrGrid, setTableOrGrid] = useState(true)
     const [cityName, setCityName] = useState("")
-
     const router = useRouter()
 
     useEffect(() => {
@@ -69,74 +56,131 @@ export default function Location() {
     }, [router.isReady]);
 
 
-    const elements = [
-        { position: 6, mass: 12.011, symbol: 'C', name: 'Carbon' },
-        { position: 7, mass: 14.007, symbol: 'N', name: 'Nitrogen' },
-        { position: 39, mass: 88.906, symbol: 'Y', name: 'Yttrium' },
-        { position: 56, mass: 137.33, symbol: 'Ba', name: 'Barium' },
-        { position: 58, mass: 140.12, symbol: 'Ce', name: 'Cerium' },
-    ];
+    let table = [];
+    let grid = [];
 
-    const rows = elements.map((element) => (
-        <tr key={element.name}>
-            <td>{element.position}</td>
-            <td>{element.name}</td>
-            <td>{element.symbol}</td>
-            <td>{element.mass}</td>
-        </tr>
-    ));
+    for (const workshop of workshops) {
+        table.push(
+            <tr key={workshop.id}>
+                <td>{workshop.dancer.name}</td>
+                <td>{workshop.location.name}</td>
+                <td>{(new Date(workshop.date)).toISOString().split("T")[0]}</td>
+                <td><Badge color="pink" variant="light">{workshop.type}</Badge></td>
+                <td><Button component="a" href={workshop.signup} target="_blank">Sign Up</Button></td>
+            </tr>
+        )
 
-    const data = [
-        { value: 'react', label: 'React' },
-        { value: 'ng', label: 'Angular' },
-        { value: 'svelte', label: 'Svelte' },
-        { value: 'vue', label: 'Vue' },
-        { value: 'riot', label: 'Riot' },
-        { value: 'next', label: 'Next.js' },
-        { value: 'blitz', label: 'Blitz.js' },
-    ];
+        grid.push(
+            <Card shadow="xs" p="md" >
+                <Card.Section component="a" href={workshop.signup} target="_blank">
+                    <Image
+                        src={workshop.dancer.picture}
+                        height={100}
+                        alt={workshop.dancer.name}
+                    />
+                </Card.Section>
+
+                <Group position="apart" mt="md" mb="xs">
+                    <Text weight={500}>{workshop.dancer.name}</Text>
+                    <Badge color="pink" variant="light">
+                        {workshop.type.toLowerCase()}
+                    </Badge>
+                </Group>
+
+                <Spoiler maxHeight={72} showLabel="Show More" hideLabel="Hide" size="sm" color="dimmed">
+                    {workshop.description}
+                </Spoiler>
+                <Button variant="light" color="blue" fullWidth mt="md" radius="md" component="a" href={workshop.signup} target="_blank">
+                    Sign up now
+                </Button>
+            </Card>
+        )
+        // TODO change button text to change based on the full status of the workshop
+    }
+
+    const finalTable = (
+        <Table>
+            <thead>
+                <tr>
+                    <th>Dancer</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Sign Up Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {table}
+            </tbody>
+        </Table>);
+
+    const finalGrid = (
+        <SimpleGrid cols={3} mt={30}>
+            {grid}
+        </SimpleGrid>
+    );
 
     return (
         <div>
             <Navbar />
-            <main className={classes.parent}>
-                <div className={classes.inner}>
-                    <Title>{cityName}</Title>
-                    <Group position='apart' className={classes.filters}>
-                        <Text> Filters: </Text>
-                        <MultiSelect
-                            data={data}
-                            placeholder="Dance Styles"
-                        />
-                        <DateRangePicker
-                            placeholder="Pick dates range"
-                        />
-                    </Group>
-                    <ScrollArea style={{ height: 150, width: '100%' }}>
-                        <Table>
-                            <thead>
-                                <tr>
-                                    <th>Element position</th>
-                                    <th>Element name</th>
-                                    <th>Symbol</th>
-                                    <th>Atomic mass</th>
-                                </tr>
-                            </thead>
-                            <tbody>{rows}</tbody>
-                        </Table>
-                    </ScrollArea>
-                    <SimpleGrid cols={4} mt={30}>
-                        <Link href="/dancer/x"><Paper shadow='xs' className={classes.dancer}>Indian Name</Paper></Link>
-                        <Link href="/dancer/x"><Paper shadow='xs' className={classes.dancer}>Indian Name</Paper></Link>
-                        <Link href="/dancer/x"><Paper shadow='xs' className={classes.dancer}>Indian Name</Paper></Link>
-                        <Link href="/dancer/x"><Paper shadow='xs' className={classes.dancer}>Indian Name</Paper></Link>
-                        <Link href="/dancer/x"><Paper shadow='xs' className={classes.dancer}>Indian Name</Paper></Link>
-                        <Link href="/dancer/x"><Paper shadow='xs' className={classes.dancer}>Indian Name</Paper></Link>
-                        <Link href="/dancer/x"><Paper shadow='xs' className={classes.dancer}>Indian Name</Paper></Link>
-                        <Link href="/dancer/x"><Paper shadow='xs' className={classes.dancer}>Indian Name</Paper></Link>
-                    </SimpleGrid>
-                </div>
+            <main >
+                <Container>
+                    <div className={classes.inner}>
+                        <Title>{cityName}</Title>
+                        <Text color="dimmed" mt="md">Sign up for workshops from reputated dancers in your area, whether you're new or a pro join a community near you.</Text>
+                        <div className={classes.gallery}>
+                            <Group>
+                                <Text>Toggle the view -&gt;</Text>
+                                <Switch size='lg' onLabel="Table" offLabel="Grid" checked={tableOrGrid} onChange={(event) => setTableOrGrid(event.currentTarget.checked)} />
+                            </Group>
+                            {
+                                tableOrGrid ?
+
+                                    finalTable
+
+                                    :
+                                    finalGrid}
+                        </div>
+                    </div>
+                </Container>
             </main>
         </div>
     )
+}
+
+export async function getServerSideProps(context) {
+    let temp = context.params.city.split("_").map((str) => {
+        if (str.includes(".")) {
+            return str.toUpperCase();
+        }
+        return (str.charAt(0).toUpperCase() + str.slice(1))
+    }).join(" ")
+
+    const workshops = await prisma.workshop.findMany({
+        where: {
+            location: {
+                is: {
+                    name: temp
+                }
+            }
+        },
+        include: {
+            location: true,
+            dancer: true
+        }
+    })
+
+    workshops.forEach((workshop) => {
+        Object.entries(workshop).forEach(([key, prop]) => {
+            if (prop instanceof Date) {
+                workshop[key] = prop.toString();
+            }
+        });
+    });
+
+    return {
+        props: {
+            workshops
+        }
+    }
 }

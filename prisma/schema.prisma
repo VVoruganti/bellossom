@@ -28,7 +28,7 @@ model Workshop {
     full        Boolean
     date        DateTime
     signup      String
-    Dancer      Dancer?      @relation(fields: [dancerId], references: [id])
+    dancer      Dancer?      @relation(fields: [dancerId], references: [id])
     dancerId    String?
     description String
     users       User[]
