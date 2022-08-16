@@ -2,8 +2,17 @@ import Navbar from '../components/Navbar.jsx'
 import {
     createStyles,
     Container,
-    Switch, Title, Text, Center, Paper,
-    Group
+    Switch,
+    Title,
+    Spoiler,
+    Text,
+    Image,
+    Card,
+    Group,
+    Table,
+    Button,
+    SimpleGrid,
+    Badge,
 } from '@mantine/core'
 import { useState } from 'react';
 import Link from 'next/link'
@@ -17,7 +26,6 @@ const useStyles = createStyles((theme) => ({
         justifyContent: 'flex-start',
         paddingTop: theme.spacing.xl,
         alignItems: 'center',
-        width: '90%'
     },
 
     gallery: {
@@ -32,18 +40,69 @@ export default function Workshops({ workshops }) {
 
     const { classes } = useStyles();
 
-    const workshopCards = workshops.map((workshop, idx) => {
-        return (
-            // TODO dynamic link generation based on id
-            <Link key={idx} href="/workshop/id" passHref>
-                <Paper className={classes.location} component="a" shadow='xs' radius="sm" >
-                    <Center style={{ width: '100%', height: '100%' }}>
-                        <Text color="white" weight={500}><span className={classes.locationHighlight}> {workshop.id}</span></Text>
-                    </Center>
-                </Paper >
-            </Link>
+    let table = [];
+    let grid = [];
+
+    for (const workshop of workshops) {
+        table.push(
+            <tr key={workshop.id}>
+                <td>{workshop.dancer.name}</td>
+                <td>{workshop.location.name}</td>
+                <td>{(new Date(workshop.date)).toISOString().split("T")[0]}</td>
+                <td><Badge color="pink" variant="light">{workshop.type}</Badge></td>
+                <td><Button component="a" href={workshop.signup} target="_blank">Sign Up</Button></td>
+            </tr>
         )
-    });
+
+        grid.push(
+            <Card shadow="xs" p="md" >
+                <Card.Section component="a" href={workshop.signup} target="_blank">
+                    <Image
+                        src={workshop.dancer.picture}
+                        height={100}
+                        alt={workshop.dancer.name}
+                    />
+                </Card.Section>
+
+                <Group position="apart" mt="md" mb="xs">
+                    <Text weight={500}>{workshop.dancer.name}</Text>
+                    <Badge color="pink" variant="light">
+                        {workshop.type.toLowerCase()}
+                    </Badge>
+                </Group>
+
+                <Spoiler maxHeight={72} showLabel="Show More" hideLabel="Hide" size="sm" color="dimmed">
+                    {workshop.description}
+                </Spoiler>
+                <Button variant="light" color="blue" fullWidth mt="md" radius="md" component="a" href={workshop.signup} target="_blank">
+                    Sign up now
+                </Button>
+            </Card>
+        )
+        // TODO change button text to change based on the full status of the workshop
+    }
+
+    const finalTable = (
+        <Table>
+            <thead>
+                <tr>
+                    <th>Dancer</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Sign Up Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {table}
+            </tbody>
+        </Table>);
+
+    const finalGrid = (
+        <SimpleGrid cols={3} mt={30}>
+            {grid}
+        </SimpleGrid>
+    );
 
     return (
         <div>
@@ -60,8 +119,11 @@ export default function Workshops({ workshops }) {
                             </Group>
                             {
                                 tableOrGrid ?
-                                    <p>Table</p> :
-                                    <p>Grid</p>}
+
+                                    finalTable
+
+                                    :
+                                    finalGrid}
                         </div>
                     </div>
                 </Container>
@@ -72,7 +134,12 @@ export default function Workshops({ workshops }) {
 
 export async function getServerSideProps(context) {
 
-    const workshops = await prisma.workshop.findMany()
+    const workshops = await prisma.workshop.findMany({
+        include: {
+            location: true,
+            dancer: true
+        }
+    })
 
     workshops.forEach((workshop) => {
         Object.entries(workshop).forEach(([key, prop]) => {
