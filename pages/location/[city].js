@@ -2,7 +2,8 @@ import Navbar from '../../components/Navbar.jsx'
 import { createStyles, Table, Title, Group, SimpleGrid, Paper, Text, ScrollArea, MultiSelect } from '@mantine/core'
 import { DateRangePicker, DateRangePickerValue, DatePicker } from '@mantine/dates';
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const useStyles = createStyles((theme) => ({
     parent: {
@@ -46,10 +47,27 @@ const useStyles = createStyles((theme) => ({
 }))
 
 export default function Location() {
-    const { classes, cx } = useStyles();
+    const { classes } = useStyles();
+
+    const [cityName, setCityName] = useState("")
+
     const router = useRouter()
 
-    const { city } = router.query
+    useEffect(() => {
+        if (!router.isReady) return;
+
+        const { city } = router.query;
+        let temp = city.split("_").map((str) => {
+            if (str.includes(".")) {
+                return str.toUpperCase();
+            }
+            return (str.charAt(0).toUpperCase() + str.slice(1))
+        }).join(" ")
+
+        setCityName(temp);
+
+    }, [router.isReady]);
+
 
     const elements = [
         { position: 6, mass: 12.011, symbol: 'C', name: 'Carbon' },
@@ -83,7 +101,7 @@ export default function Location() {
             <Navbar />
             <main className={classes.parent}>
                 <div className={classes.inner}>
-                    <Title>{city}</Title>
+                    <Title>{cityName}</Title>
                     <Group position='apart' className={classes.filters}>
                         <Text> Filters: </Text>
                         <MultiSelect

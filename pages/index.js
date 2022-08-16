@@ -84,25 +84,23 @@ export default function Home({ locations, workshops }) {
 
     const locationCards = locations.map((location, idx) => {
         return (
-            // TODO dynamic link generation based on location enum
-            <Link key={idx} href="/location/nyc" passHref>
+            <Link key={idx} href={`/location/${location.name.replaceAll(" ", "_").toLowerCase()}`} passHref>
                 <BackgroundImage className={classes.location} component="a" src={location.picture} radius="sm" >
                     <Center style={{ width: '100%', height: '100%' }}>
-                        <Text color="white" weight={500}><span className={classes.locationHighlight}> {location.name}</span></Text>
+                        <Text color="white" weight={500}><span className={classes.locationHighlight}>{location.name}</span></Text>
                     </Center>
                 </BackgroundImage >
-            </Link>
+            </Link >
         )
     })
 
 
     const workshopCards = workshops.map((workshop, idx) => {
         return (
-            // TODO dynamic link generation based on id
-            <Link key={idx} href="/workshop/id" passHref>
-                <Paper className={classes.location} component="a" shadow='xs' radius="sm" >
+            <Link key={idx} href={`/workshops/${workshop.id}`} passHref>
+                <Paper className={classes.location} component="a" shadow='xs' radius="sm">
                     <Center style={{ width: '100%', height: '100%' }}>
-                        <Text color="white" weight={500}><span className={classes.locationHighlight}> {workshop.id}</span></Text>
+                        <Text color="white" weight={500}><span className={classes.locationHighlight}>{workshop.id}</span></Text>
                     </Center>
                 </Paper >
             </Link>
