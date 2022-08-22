@@ -1,4 +1,5 @@
 import Navbar from '../components/Navbar.jsx'
+import Passage from '@passageidentity/passage-node';
 import {
     createStyles,
     Container,
@@ -35,7 +36,7 @@ const useStyles = createStyles((theme) => ({
 
 }))
 
-export default function Workshops({ workshops }) {
+export default function Workshops({ workshops, isAuthorized }) {
     const [tableOrGrid, setTableOrGrid] = useState(true)
 
     const { classes } = useStyles();
@@ -106,7 +107,7 @@ export default function Workshops({ workshops }) {
 
     return (
         <div>
-            <Navbar />
+            <Navbar isAuthorized={isAuthorized} />
             <main >
                 <Container>
                     <div className={classes.inner}>
@@ -149,9 +150,44 @@ export async function getServerSideProps(context) {
         });
     });
 
-    return {
-        props: {
-            workshops
-        }, // will be passed to the page component as props
+    const appID = process.env.NEXT_PUBLIC_PASSAGE_APP_ID;
+    const passage = new Passage({
+        appID,
+        apiKey: process.env.PASSAGE_API_KEY,
+        authStrategy: "HEADER",
+    });
+    try {
+        const authToken = context.req.cookies['psg_auth_token'];
+        const req = {
+            headers: {
+                authorization: `Bearer ${authToken}`,
+            },
+        };
+        const userID = await passage.authenticateRequest(req);
+
+        if (userID) {
+            return {
+                props: {
+                    workshops,
+                    isAuthorized: true,
+                    appID: appID
+                }
+            };
+        } else {
+            return {
+                props: {
+                    workshops,
+                    isAuthorized: false,
+                    appID: appID
+                }
+            }
+        }
+    } catch (error) {
+        // authentication failed
+        return { props: { isAuthorized: false, appID: appID } };
     }
 }
+
+
+
+

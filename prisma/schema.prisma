@@ -37,9 +37,13 @@ model Workshop {
 
 model User {
     id        String     @id @default(cuid())
-    name      String
-    email     String
+    name      String?
+    email     String?    @unique
+    createdAt DateTime   @default(now()) @map(name: "created_at")
+    updatedAt DateTime   @updatedAt @map(name: "updated_at")
     workshops Workshop[]
+
+    @@map(name: "users")
 }
 
 model Location {

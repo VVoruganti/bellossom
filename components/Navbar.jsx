@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { createStyles, Header, Button, Text, Container, Image, Group, Burger } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import Link from 'next/link';
+import { useRouter } from 'next/router'
 import { NextLink } from '@mantine/next';
+import { Passage } from '@passageidentity/passage-js';
+
 
 
 const HEADER_HEIGHT = 60;
@@ -58,9 +61,12 @@ const links = [
     },
 ]
 
-export default function HeaderSimple() {
+export default function HeaderSimple({ isAuthorized }) {
     const [opened, toggleOpened] = useToggle([false, true]);
     const { classes } = useStyles();
+
+    const router = useRouter()
+    const passage = new Passage(process.env.NEXT_PUBLIC_PASSAGE_APP_ID);
 
     const items = links.map((link) => (
         <NextLink
@@ -71,6 +77,17 @@ export default function HeaderSimple() {
             {link.label}
         </NextLink>
     ));
+
+    const signIn = (e) => {
+        e.preventDefault();
+        router.push('/auth')
+    }
+
+    const signOut = (e) => {
+        e.preventDefault();
+        passage.signOut();
+        router.push('/');
+    }
 
     return (
         <Header height={HEADER_HEIGHT} >
@@ -87,9 +104,7 @@ export default function HeaderSimple() {
                 <Group spacing={5} className={classes.links}>
                     {items}
                 </Group>
-                <Link href="/auth" passHref>
-                    <Button component="a">Signup</Button>
-                </Link>
+                <Button onClick={isAuthorized ? signOut : signIn}>{isAuthorized ? "Sign Out" : "Sign In"}</Button>
             </Container>
         </Header>
     );

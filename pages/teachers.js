@@ -1,4 +1,5 @@
 import Navbar from '../components/Navbar.jsx'
+import Passage from '@passageidentity/passage-node';
 import {
     createStyles,
     Container,
@@ -35,7 +36,7 @@ const useStyles = createStyles((theme) => ({
 
 }))
 
-export default function Teachers({ dancers }) {
+export default function Teachers({ dancers, isAuthorized }) {
     const [gridOrTable, setGridOrTable] = useState(true)
 
     const { classes } = useStyles();
@@ -101,7 +102,7 @@ export default function Teachers({ dancers }) {
 
     return (
         <div>
-            <Navbar />
+            <Navbar isAuthorized={isAuthorized} />
             <main >
                 <Container>
                     <div className={classes.inner}>
@@ -128,10 +129,40 @@ export default function Teachers({ dancers }) {
 export async function getServerSideProps(context) {
 
     const dancers = await prisma.dancer.findMany()
+    const appID = process.env.NEXT_PUBLIC_PASSAGE_APP_ID;
+    const passage = new Passage({
+        appID,
+        apiKey: process.env.PASSAGE_API_KEY,
+        authStrategy: "HEADER",
+    });
+    try {
+        const authToken = context.req.cookies['psg_auth_token'];
+        const req = {
+            headers: {
+                authorization: `Bearer ${authToken}`,
+            },
+        };
+        const userID = await passage.authenticateRequest(req);
 
-    return {
-        props: {
-            dancers
-        }, // will be passed to the page component as props
+        if (userID) {
+            return {
+                props: {
+                    dancers,
+                    isAuthorized: true,
+                    appID: appID
+                }
+            };
+        } else {
+            return {
+                props: {
+                    dancers,
+                    isAuthorized: false,
+                    appID: appID
+                }
+            }
+        }
+    } catch (error) {
+        // authentication failed
+        return { props: { isAuthorized: false, appID: appID } };
     }
 }
